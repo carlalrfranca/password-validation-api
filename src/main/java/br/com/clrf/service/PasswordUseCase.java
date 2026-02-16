@@ -3,10 +3,12 @@ package br.com.clrf.service;
 import br.com.clrf.domain.policy.PasswordPolicy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class PasswordUseCase {
 
     private final PasswordPolicy rules;
