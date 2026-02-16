@@ -17,8 +17,7 @@ public class PasswordUseCase {
         Optional<String> failedRule = rules.passwordValidate(password);
 
         if (failedRule.isPresent()) {
-            log.error("\u001B[34mPassword validation failed | rule = {}\u001B[0m",
-                    failedRule.get());
+            log.warn("Password validation failed | rule={}", failedRule.get());
             return false;
         }
         return true;
