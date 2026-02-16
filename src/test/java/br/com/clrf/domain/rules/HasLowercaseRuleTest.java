@@ -2,9 +2,7 @@ package br.com.clrf.domain.rules;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -18,11 +16,9 @@ public class HasLowercaseRuleTest {
     void setUp() {
         rule = new HasLowercaseRule();
 
-        invalid = List.of(
-                "ABCDEF", "ABC123HUH!", "ABTP9!FOK");
+        invalid = List.of( "ABCDEF", "ABC123HUH!", "ABTP9!FOK");
 
-        valid = List.of(
-                "abcdefg", "AbTp9!fok");
+        valid = List.of("abcdefg", "AbTp9!fok");
     }
 
     @Test
@@ -43,5 +39,4 @@ public class HasLowercaseRuleTest {
         assertTrue(rule.isSatisfiedBy("a"));
         assertTrue(rule.isSatisfiedBy("abc"));
     }
-
 }
