@@ -22,6 +22,7 @@ class CompositePasswordPolicyTest {
         policy = new CompositePasswordPolicy(
                 List.of(
                         new NoWhiteSpaceRule(),
+                        new OnlyAllowedCharRule(SPECIAL),
                         new MinLengthRule(MIN_LENGTH),
                         new HasDigitRule(),
                         new HasLowercaseRule(),
@@ -33,7 +34,7 @@ class CompositePasswordPolicyTest {
 
         valid = List.of(
                 "AbTp9!fok",
-                "AbTp9!fok_"
+                "AbTp9!fokC"
         );
 
         invalid = List.of(
@@ -43,7 +44,8 @@ class CompositePasswordPolicyTest {
                 "AbTp9!foo",
                 "AbTp9!foA",
                 "AbTp9 fok",
-                "AbTp9!fok\t"
+                "AbTp9!fok\t",
+                "AbTp9!fok_"
         );
     }
 
