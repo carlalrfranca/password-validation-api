@@ -21,6 +21,7 @@ class PasswordUseCaseTest {
         var policy = new CompositePasswordPolicy(
                 List.of(
                         new NoWhiteSpaceRule(),
+                        new OnlyAllowedCharRule(SPECIAL),
                         new MinLengthRule(MIN_LENGTH),
                         new HasDigitRule(),
                         new HasLowercaseRule(),
