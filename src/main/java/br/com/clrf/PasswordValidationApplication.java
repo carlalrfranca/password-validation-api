@@ -1,4 +1,11 @@
 package br.com.clrf;
 
-public class PasswordValidationApplication {
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+class PasswordValidationApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(PasswordValidationApplication.class, args);
+    }
 }
