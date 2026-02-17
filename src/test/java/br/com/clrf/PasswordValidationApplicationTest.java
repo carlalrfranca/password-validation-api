@@ -1,11 +1,12 @@
 package br.com.clrf;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import org.springframework.boot.test.context.SpringBootTest;
 
-public class PasswordValidationApplicationTest {
+@SpringBootTest
+class PasswordValidationApplicationTest {
+
     @Test
-    void shouldStartApplicationWithoutException() {
-        assertDoesNotThrow(() -> PasswordValidationApplication.main(new String[]{}));
+    void contextLoads() {
     }
 }
