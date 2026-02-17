@@ -169,11 +169,13 @@ Expected response:
 
 ## 7. HTTP Status Codes
 
-Status Code                 Description
-  --------------------------- -------------------------------------------
-- 200 OK                      Password validation executed successfully
-- 400 Bad Request             Request body is null or malformed
-- 500 Internal Server Error   Unexpected server error
+## 7. HTTP Status Codes
+
+| Status Code | Description |
+|------------|-------------|
+| 200 OK | Password validation executed successfully |
+| 400 Bad Request | Request body is null or malformed |
+| 500 Internal Server Error | Unexpected server error |
 
 ------------------------------------------------------------------------
 
