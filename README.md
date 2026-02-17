@@ -274,7 +274,6 @@ Application runs at:
 ```
 http://localhost:8080
 ```
-
 ---
 
 ## License
