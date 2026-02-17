@@ -8,7 +8,10 @@ API REST segura para validação de senhas construída com Spring Boot, seguindo
 
 Este projeto expõe uma API REST responsável por validar senhas de acordo com um conjunto rigoroso e determinístico de regras de segurança.
 
-A solução foi desenvolvida com ênfase em:
+A implementação prioriza comportamento determinístico e modelagem explícita de regras, evitando validações implícitas ou lógica oculta.  
+Todas as regras são modeladas como componentes de domínio de primeira classe, garantindo clareza, previsibilidade e extensibilidade.
+
+A solução foi projetada com ênfase em:
 
 - Separação de responsabilidades
 - Baixo acoplamento e alta coesão
@@ -20,17 +23,17 @@ A solução foi desenvolvida com ênfase em:
 
 ## 2. Requisitos Funcionais
 
-Uma senha é considerada válida quando:
+Uma senha é considerada válida se:
 
-- Possui pelo menos 9 caracteres
-- Contém pelo menos:
-    - 1 letra maiúscula
-    - 1 letra minúscula
-    - 1 dígito
-    - 1 caractere especial do conjunto: `!@#$%^&*()-+`
-- Não possui caracteres repetidos
-- Não possui espaços em branco
-- Contém apenas caracteres permitidos (alfanuméricos + conjunto especial definido)
+- Possuir pelo menos 9 caracteres
+- Conter pelo menos:
+  - 1 letra maiúscula
+  - 1 letra minúscula
+  - 1 dígito
+  - 1 caractere especial do conjunto: `!@#$%^&*()-+`
+- Não possuir caracteres repetidos
+- Não conter espaços em branco
+- Conter apenas caracteres alfanuméricos e o conjunto explícito de caracteres especiais definidos
 
 A API retorna um booleano indicando se a senha é válida.
 
@@ -73,7 +76,8 @@ src/main/java/br/com/clrf
         └── PasswordResponse.java
 ```
 
-A camada de domínio é independente de framework e contém apenas regras de negócio puras.
+A camada de domínio é agnóstica a frameworks e contém exclusivamente lógica de negócio pura.  
+Ela é intencionalmente isolada do Spring e de quaisquer anotações específicas de framework, preservando portabilidade e separação estrita de responsabilidades.
 
 ---
 
@@ -86,17 +90,17 @@ O projeto separa responsabilidades em camadas distintas:
 - **web** → responsabilidades HTTP
 - **service** → orquestração da aplicação
 - **domain** → regras de negócio
-- **config** → composição das dependências
+- **config** → composição de dependências
 
-Essa abordagem protege o domínio de dependências externas e mantém baixo acoplamento.
+Essa estrutura protege o domínio de dependências de framework e mantém o acoplamento reduzido.
 
 ---
 
 ### Padrão Composite para Composição de Regras
 
-A validação de senha é implementada utilizando uma estrutura do tipo Composite.
+A validação da senha é implementada utilizando o padrão Composite.
 
-Cada regra implementa o contrato comum:
+Cada regra implementa:
 
 ```java
 boolean isSatisfiedBy(String password);
@@ -115,13 +119,52 @@ Benefícios:
 
 ## 5. Estratégia de Validação
 
-A validação é delegada ao `CompositePasswordPolicy`, que executa todas as regras configuradas e interrompe na primeira falha.
-
-Isso garante comportamento determinístico e previsível.
+- A validação é delegada à CompositePasswordPolicy, que executa todas as regras configuradas e interrompe na primeira falha (abordagem fail-fast).
+- A camada de domínio assume entrada válida (não nula) como pré-condição.
+- A validação de transporte (JSON malformado, corpo nulo, campos nulos) é tratada na camada web
 
 ---
 
-## 6. Uso da API
+## 6. Tratamento de Erros e Matriz de Responsabilidades
+
+O sistema separa explicitamente erros de transporte de violações de regras de negócio.
+
+### Erros de Transporte (Camada Web)
+
+Tratados automaticamente pelo Spring MVC e Jackson:
+
+- JSON malformado → 400 Bad Request
+- Corpo da requisição ausente → 400 Bad Request
+- Campo password nulo → 400 Bad Request
+- Content-Type incorreto → 400 Bad Request
+
+Esses erros são considerados violações de contrato HTTP, não falhas de negócio.\
+O controller garante que requisições inválidas não alcancem a camada de domínio.\
+
+---
+
+### Camada de Aplicação (Service)
+
+A camada de serviço:
+- Orquestra a validação
+- Registra o nome da regra que falhou
+- Não realiza validação de transporte
+- Não contém regras de negócio
+
+---
+
+### Camada de Domínio (Policy & Rules)
+
+A camada de domínio:
+
+- Avalia as regras da senha
+- Retorna o resultado da validação
+- Não realiza parsing de JSON
+- Não trata preocupações HTTP
+- Assume que as pré-condições da aplicação foram respeitadas
+Essa separação garante que o domínio permaneça puro e independente de frameworks.
+
+## 7. Uso da API
 
 ### Endpoint
 
@@ -136,10 +179,12 @@ http://localhost:8080
 ### Senha Válida (curl)
 
 ```
-curl -X POST http://localhost:8080/api-password/validate   -H "Content-Type: application/json"   -d '{"password":"AbTp9!fok"}'
+curl -X POST http://localhost:8080/api-password/validate \
+  -H "Content-Type: application/json" \
+  -d '{"password":"AbTp9!fok"}'
 ```
 
-Resposta esperada:
+### Resposta esperada:
 
 ```
 {
@@ -150,10 +195,12 @@ Resposta esperada:
 ### Senha Inválida (curl)
 
 ```
-curl -X POST http://localhost:8080/api-password/validate   -H "Content-Type: application/json"   -d '{"password":"AbTp9!foo"}'
+curl -X POST http://localhost:8080/api-password/validate \
+  -H "Content-Type: application/json" \
+  -d '{"password":"AbTp9!foo"}'
 ```
 
-Resposta esperada:
+### Resposta esperada:
 
 ```
 {
@@ -178,17 +225,17 @@ Resposta esperada:
 
 ---
 
-## 7. Códigos de Status HTTP
+## 8. Códigos de Status HTTP
 
 | Código | Descrição |
 |--------|-----------|
 | 200 OK | Validação executada com sucesso |
-| 400 Bad Request | Corpo da requisição nulo ou inválido |
+| 400 Bad Request | Violação do contrato HTTP (corpo nulo, JSON malformado, content type inválido) |
 | 500 Internal Server Error | Erro inesperado no servidor |
 
 ---
 
-## 8. Observabilidade
+## 9. Observabilidade
 
 O logging é implementado na camada de serviço:
 
@@ -199,7 +246,7 @@ O logging é implementado na camada de serviço:
 
 ---
 
-## 9. Considerações de Segurança
+## 10. Considerações de Segurança
 
 - A API não expõe detalhes internos das regras de validação
 - Apenas um booleano é retornado ao cliente
@@ -215,7 +262,7 @@ Possíveis melhorias para ambiente produtivo:
 
 ---
 
-## 10. Tecnologias Utilizadas
+## 11. Tecnologias Utilizadas
 
 - Java 21 (LTS)
 - Spring Boot
@@ -225,9 +272,9 @@ Possíveis melhorias para ambiente produtivo:
 
 ---
 
-## 11. Justificativa da Versão do Java
+## 12. Justificativa da Versão do Java
 
-O projeto utiliza Java 21 (LTS).
+O projeto utiliza Java 21 (LTS).\
 
 Embora Java 17 fosse suficiente para este caso de uso, o Java 21 foi escolhido estrategicamente devido a:
 
@@ -238,7 +285,7 @@ Embora Java 17 fosse suficiente para este caso de uso, o Java 21 foi escolhido e
 
 ---
 
-## 12. Estratégia de Testes
+## 13. Estratégia de Testes
 
 O projeto inclui:
 
@@ -252,7 +299,7 @@ O objetivo é garantir isolamento comportamental e prevenir regressões ao adici
 
 ---
 
-## 13. Como Executar
+## 14. Como Executar
 
 ### Requisitos
 
