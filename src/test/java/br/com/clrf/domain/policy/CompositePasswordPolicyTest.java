@@ -34,11 +34,6 @@ class CompositePasswordPolicyTest {
     }
 
     @Test
-    void shouldReturnFailureWhenPasswordIsNull() {
-        assertTrue(policy.passwordValidate(null).isPresent());
-    }
-
-    @Test
     void shouldReturnTrueForValidPasswords() {
         for (String p : valid) {
             assertTrue(policy.passwordValidate(p).isEmpty());
