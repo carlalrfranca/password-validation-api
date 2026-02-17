@@ -159,9 +159,6 @@ Expected response:
 3.  Add header: `Content-Type: application/json`
 4.  Body (JSON):
 
-```{=html}
-<!-- -->
-```
     {
       "password": "AbTp9!fok"
     }
@@ -174,9 +171,9 @@ Expected response:
 
 Status Code                 Description
   --------------------------- -------------------------------------------
-200 OK                      Password validation executed successfully
-400 Bad Request             Request body is null or malformed
-500 Internal Server Error   Unexpected server error
+- 200 OK                      Password validation executed successfully
+- 400 Bad Request             Request body is null or malformed
+- 500 Internal Server Error   Unexpected server error
 
 ------------------------------------------------------------------------
 
