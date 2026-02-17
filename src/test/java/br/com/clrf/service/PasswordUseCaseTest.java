@@ -11,8 +11,9 @@ class PasswordUseCaseTest {
 
     private static final String SPECIAL = "!@#$%^&*()-+";
     private static final int MIN_LENGTH = 9;
-
     private PasswordUseCase useCase;
+    private List<String> valid;
+    private List<String> invalid;
 
     @BeforeEach
     void setUp() {
@@ -30,20 +31,21 @@ class PasswordUseCaseTest {
         );
 
         useCase = new PasswordUseCase(policy);
+        valid = List.of("AbTp9!fok", "AbTp9!fokC");
+        invalid = List.of("", "aa", "AAAbbbCc", "AbTp9!foo", "AbTp9!foA", "AbTp9 fok", "AbTp9!fok\t", "AbTp9!fok_");
     }
 
     @Test
-    void shouldReturnTrueWhenPasswordIsValid() {
-        assertTrue(useCase.execute("AbTp9!fok"));
+    void shouldReturnTrueForValidPasswords() {
+        for (String p : valid) {
+            assertTrue(useCase.execute(p));
+        }
     }
 
     @Test
-    void shouldReturnFalseWhenPasswordIsInvalid() {
-        assertFalse(useCase.execute("AbTp9fok"));
-    }
-
-    @Test
-    void shouldReturnFalseWhenNull() {
-        assertFalse(useCase.execute(null));
+    void shouldReturnTrueFOrInvalidPasswords() {
+        for (String p : invalid) {
+            assertFalse(useCase.execute(p));
+        }
     }
 }

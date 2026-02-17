@@ -9,23 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class HasLowercaseRuleTest {
 
     private HasLowercaseRule rule;
-    private List<String> invalid;
     private List<String> valid;
+    private List<String> invalid;
 
     @BeforeEach
     void setUp() {
         rule = new HasLowercaseRule();
-
+        valid = List.of("abcdefg", "AbTp9!fok", "a", "abc");
         invalid = List.of( "ABCDEF", "ABC123HUH!", "ABTP9!FOK");
-        valid = List.of("abcdefg", "AbTp9!fok");
     }
 
-    @Test
-    void shouldReturnFalseWhenNoLowercase() {
-        for (String p : invalid) {
-            assertFalse(rule.isSatisfiedBy(p));
-        }
-    }
     @Test
     void shouldReturnTrueWhenHasLowercase() {
         for (String p : valid) {
@@ -34,8 +27,9 @@ public class HasLowercaseRuleTest {
     }
 
     @Test
-    void shouldReturnTrueWhenOnlyLowercase() {
-        assertTrue(rule.isSatisfiedBy("a"));
-        assertTrue(rule.isSatisfiedBy("abc"));
+    void shouldReturnFalseWhenNoLowercase() {
+        for (String p : invalid) {
+            assertFalse(rule.isSatisfiedBy(p));
+        }
     }
 }

@@ -9,28 +9,27 @@ class OnlyAllowedCharRuleTest {
 
     private static final String SPECIAL = "!@#$%^&*()-+";
     private OnlyAllowedCharRule rule;
-    private List<String> invalid;
     private List<String> valid;
+    private List<String> invalid;
 
     @BeforeEach
     void setUp() {
         rule = new OnlyAllowedCharRule(SPECIAL);
-
-        invalid = List.of("Ab Tp9!fok", "AbTp9!fok_", "AbTp9!fok=");
         valid = List.of("AbTp9!fok", "ABCdef123-", "aB1+");
-    }
-
-    @Test
-    void shouldReturnFalseWhenContainsNotAllowedChars() {
-        for (String p : invalid) {
-            assertFalse(rule.isSatisfiedBy(p));
-        }
+        invalid = List.of("Ab Tp9!fok", "AbTp9!fok_", "AbTp9!fok=");
     }
 
     @Test
     void shouldReturnTrueWhenAllCharsAreAllowed() {
         for (String p : valid) {
             assertTrue(rule.isSatisfiedBy(p));
+        }
+    }
+
+    @Test
+    void shouldReturnFalseWhenContainsNotAllowedChars() {
+        for (String p : invalid) {
+            assertFalse(rule.isSatisfiedBy(p));
         }
     }
 }

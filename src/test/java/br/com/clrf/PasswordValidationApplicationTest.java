@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class PasswordValidationApplicationTest {
 
     @Test
-    void contextLoads() {
+    void shouldRunMain() {
+        PasswordValidationApplication.main(new String[]{});
     }
 }

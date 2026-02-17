@@ -9,26 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class HasUppercaseRuleTest {
 
     private HasUppercaseRule rule;
-    private List<String> invalid;
     private List<String> valid;
+    private List<String> invalid;
 
     @BeforeEach
     void setUp() {
         rule = new HasUppercaseRule();
-
-        invalid = List.of(
-                "abcdef", "123456", "!@#$%^&*()");
-
-        valid = List.of(
-                "a1B", "AbTp9!fok", "ABC1!");
+        valid = List.of("a1B", "AbTp9!fok", "ABC1!", "A", "ABC");
+        invalid = List.of("abcdef", "123456", "!@#$%^&*()");
     }
 
-    @Test
-    void shouldReturnFalseWhenNoUppercase() {
-        for (String p : invalid) {
-            assertFalse(rule.isSatisfiedBy(p));
-        }
-    }
     @Test
     void shouldReturnTrueWhenHasUppercase() {
         for (String p : valid) {
@@ -37,9 +27,9 @@ public class HasUppercaseRuleTest {
     }
 
     @Test
-    void shouldReturnTrueWhenOnlyUppercase() {
-        assertTrue(rule.isSatisfiedBy("A"));
-        assertTrue(rule.isSatisfiedBy("ABC"));
+    void shouldReturnFalseWhenNoUppercase() {
+        for (String p : invalid) {
+            assertFalse(rule.isSatisfiedBy(p));
+        }
     }
-
 }

@@ -8,15 +8,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class NoWhiteSpaceRuleTest {
 
     private NoWhiteSpaceRule rule;
-    private List<String> passwordsWithWhitespace;
-    private List<String> passwordsWithoutWhitespace;
+    private List<String> valid;
+    private List<String> invalid;
 
     @BeforeEach
     void setUp() {
         rule = new NoWhiteSpaceRule();
-
-        passwordsWithWhitespace = List.of("a b", "ab ", " a", "a\tb", "a\nb", "a\rb");
-        passwordsWithoutWhitespace = List.of("AbTp9!fok", "ABCdef123!", "!@#$%^&*()-+", "a_b-c.d");
+        valid = List.of("AbTp9!fok", "ABCdef123!", "!@#$%^&*()-+", "a_b-c.d");
+        invalid = List.of("a b", "ab ", " a", "a\tb", "a\nb", "a\rb");
     }
 
     @Test
@@ -25,18 +24,16 @@ class NoWhiteSpaceRuleTest {
     }
 
     @Test
-    void shouldReturnFalseWhenPasswordContainsWhitespace() {
-        for (String password : passwordsWithWhitespace) {
-            assertFalse(rule.isSatisfiedBy(password),
-                    "Expected false for: [" + password + "]");
+    void shouldReturnTrueWhenPasswordHasNoWhitespace() {
+        for (String password : valid) {
+            assertTrue(rule.isSatisfiedBy(password));
         }
     }
 
     @Test
-    void shouldReturnTrueWhenPasswordHasNoWhitespace() {
-        for (String password : passwordsWithoutWhitespace) {
-            assertTrue(rule.isSatisfiedBy(password),
-                    "Expected true for: [" + password + "]");
+    void shouldReturnFalseWhenPasswordContainsWhitespace() {
+        for (String password : invalid) {
+            assertFalse(rule.isSatisfiedBy(password));
         }
     }
 }
