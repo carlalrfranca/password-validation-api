@@ -9,6 +9,7 @@ public class OnlyAllowedCharRule implements PasswordRule {
 
     @Override
     public boolean isSatisfiedBy(String password) {
+
         for (char c : password.toCharArray()) {
             if (!isAllowed(c)) {
                 return false;
@@ -18,6 +19,7 @@ public class OnlyAllowedCharRule implements PasswordRule {
     }
 
     private boolean isAllowed(char c) {
+
         return Character.isLetterOrDigit(c) || specialChars.indexOf(c) >= 0;
     }
 }

@@ -29,45 +29,21 @@ class CompositePasswordPolicyTest {
                 )
         );
 
-        valid = List.of(
-                "AbTp9!fok",
-                "AbTp9!fokC"
-        );
-
-        invalid = List.of(
-                "",
-                "aa",
-                "AAAbbbCc",
-                "AbTp9!foo",
-                "AbTp9!foA",
-                "AbTp9 fok",
-                "AbTp9!fok\t",
-                "AbTp9!fok_"
-        );
-    }
-
-    @Test
-    void shouldReturnFailureWhenPasswordIsNull() {
-        assertTrue(policy.passwordValidate(null).isPresent());
+        valid = List.of("AbTp9!fok", "AbTp9!fokC");
+        invalid = List.of("", "aa", "AAAbbbCc", "AbTp9!foo", "AbTp9!foA", "AbTp9 fok", "AbTp9!fok\t", "AbTp9!fok_");
     }
 
     @Test
     void shouldReturnTrueForValidPasswords() {
         for (String p : valid) {
-            assertTrue(
-                    policy.passwordValidate(p).isEmpty(),
-                    "Expected true for: [" + p + "]"
-            );
+            assertTrue(policy.passwordValidate(p).isEmpty());
         }
     }
 
     @Test
     void shouldReturnFalseForInvalidPasswords() {
         for (String p : invalid) {
-            assertTrue(
-                    policy.passwordValidate(p).isPresent(),
-                    "Expected false for: [" + p + "]"
-            );
+            assertTrue(policy.passwordValidate(p).isPresent());
         }
     }
 }

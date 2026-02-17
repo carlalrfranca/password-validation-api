@@ -7,9 +7,15 @@ architecture and SOLID principles.
 
 ## 1. Overview
 
-This project exposes a REST API responsible for validating passwords according to a strict and deterministic set of security rules.
+This project exposes a REST API responsible for validating passwords according to a strict \
+and deterministic set of security rules.
 
-The solution was designed with emphasis on:
+The implementation prioritizes deterministic behavior and explicit rule modeling over \
+implicit validation logic.
+All validation rules are modeled as first-class domain components to ensure clarity, \
+predictability, and extensibility.\
+
+The solution was designed with an emphasis on:
 
 - Separation of concerns
 - Low coupling and high cohesion
@@ -31,8 +37,7 @@ A password is considered valid if it:
     -   1 special character from the set: `!@#$%^&*()-+`
 -   Contains no repeated characters
 -   Contains no whitespace
--   Contains only allowed characters (alphanumeric + defined special
-    set)
+-   Contains only alphanumeric characters and the explicitly defined special character set.
 
 The API returns a boolean indicating whether the password is valid.
 
@@ -75,7 +80,9 @@ The API returns a boolean indicating whether the password is valid.
             └── PasswordResponse.java
 ```
 
-The domain layer is framework-agnostic and contains only pure business logic.
+The domain layer is framework-agnostic and contains only pure business logic.\
+The domain layer is intentionally isolated from Spring and any framework-specific \ 
+annotations to preserve portability and maintain strict separation of concerns.
 
 ---
 
@@ -117,12 +124,56 @@ Benefits:
 
 ## 5. Validation Strategy
 
-Validation is delegated to `CompositePasswordPolicy`, which executes all configured rules and stops at the first failure.
+- Validation is delegated to CompositePasswordPolicy, which executes all configured rules and stops at the first failure (fail-fast approach).
+- The domain layer assumes valid (non-null) input as a precondition.
+- Transport-level validation (malformed JSON, null body, null fields) is handled at the web layer.
+---
+
+## 6. Error Handling & Responsibility Matrix
+
+The system explicitly separates transport errors from business rule violations.
+
+
+### Transport-Level Errors (Web Layer)
+
+Handled automatically by Spring MVC and Jackson:
+
+- Malformed JSON → 400 Bad Request
+- Missing request body → 400 Bad Request
+- Null password field → 400 Bad Request
+- Incorrect content type → 400 Bad Request
+
+These errors are considered contract violations, not business failures.\
+The controller ensures invalid requests do not reach the domain layer.\
 
 ---
 
-## 6. API Usage
+### Application Layer (Service)
 
+The service layer:
+
+- Orchestrates validation
+- Logs failed rule names
+- Does not perform transport validation
+- Does not contain business rules
+
+___
+
+### Domain Layer (Policy & Rules)
+
+The domain layer:
+
+- Evaluates password rules
+- Returns validation result
+- Does not handle JSON parsing
+- Does not handle HTTP concerns
+- Assumes input respects application preconditions
+
+This separation ensures the domain remains pure and framework-agnostic.
+
+--- 
+
+## 7. API Usage
 ### Endpoint
 
 POST `/api-password/validate`
@@ -136,7 +187,9 @@ http://localhost:8080
 ### Valid Password (curl)
 
 ```
-curl -X POST http://localhost:8080/api-password/validate   -H "Content-Type: application/json"   -d '{"password":"AbTp9!fok"}'
+curl -X POST http://localhost:8080/api-password/validate \
+  -H "Content-Type: application/json" \
+  -d '{"password":"AbTp9!fok"}'
 ```
 
 Expected response:
@@ -150,7 +203,9 @@ Expected response:
 ### Invalid Password (curl)
 
 ```
-curl -X POST http://localhost:8080/api-password/validate   -H "Content-Type: application/json"   -d '{"password":"AbTp9!foo"}'
+curl -X POST http://localhost:8080/api-password/validate \
+  -H "Content-Type: application/json" \
+  -d '{"password":"AbTp9!foo"}'
 ```
 
 Expected response:
@@ -178,17 +233,17 @@ Expected response:
 
 ---
 
-## 7. HTTP Status Codes
+## 8. HTTP Status Codes
 
 | Status Code | Description |
 |------------|-------------|
 | 200 OK | Password validation executed successfully |
-| 400 Bad Request | Request body is null or malformed |
+| 400 Bad Request | Request violates HTTP contract (null body, malformed JSON, invalid content type) |
 | 500 Internal Server Error | Unexpected server error |
 
 ---
 
-## 8. Observability
+## 9. Observability
 
 Logging is implemented at the service layer:
 
@@ -199,7 +254,7 @@ Logging is implemented at the service layer:
 
 ---
 
-## 9. Security Considerations
+## 10. Security Considerations
 
 - The API does not expose internal validation rule details.
 - Only a boolean result is returned.
@@ -215,7 +270,7 @@ Potential production enhancements:
 
 ---
 
-## 10. Technology Stack
+## 11. Technology Stack
 
 - Java 21 (LTS)
 - Spring Boot
@@ -225,7 +280,7 @@ Potential production enhancements:
 
 ---
 
-## 11. Java Version Choice
+## 12. Java Version Choice
 
 The project uses Java 21 (LTS).
 
@@ -238,7 +293,7 @@ Although Java 17 would be sufficient for this use case, Java 21 was selected str
 
 ---
 
-## 12. Testing Strategy
+## 13. Testing Strategy
 
 The project includes:
 
@@ -252,7 +307,7 @@ The goal is to ensure behavioral isolation and prevent regressions when adding n
 
 ---
 
-## 13. How to Run
+## 14. How to Run
 
 ### Requirements
 

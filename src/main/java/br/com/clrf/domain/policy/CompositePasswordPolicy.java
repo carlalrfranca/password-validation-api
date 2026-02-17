@@ -13,10 +13,9 @@ public class CompositePasswordPolicy implements PasswordPolicy {
     @Override
     public Optional<String> passwordValidate(String password) {
 
-        if (password == null) {
-            return Optional.of("Password cannot be null");
-        }
-        return rules.stream().filter(rule -> !rule.isSatisfiedBy(password))
-                .map(rule -> rule.getClass().getSimpleName()).findFirst();
+        return rules.stream()
+                .filter(rule -> !rule.isSatisfiedBy(password))
+                .map(rule -> rule.getClass().getSimpleName())
+                .findFirst();
     }
 }
