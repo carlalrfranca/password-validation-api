@@ -2,15 +2,12 @@ package br.com.clrf.domain.rules;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class OnlyAllowedCharRuleTest {
 
     private static final String SPECIAL = "!@#$%^&*()-+";
-
     private OnlyAllowedCharRule rule;
     private List<String> invalid;
     private List<String> valid;

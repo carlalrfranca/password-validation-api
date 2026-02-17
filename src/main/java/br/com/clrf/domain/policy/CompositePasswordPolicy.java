@@ -2,7 +2,6 @@ package br.com.clrf.domain.policy;
 
 import br.com.clrf.domain.rules.PasswordRule;
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 import java.util.Optional;
 

@@ -17,7 +17,6 @@ public class HasLowercaseRuleTest {
         rule = new HasLowercaseRule();
 
         invalid = List.of( "ABCDEF", "ABC123HUH!", "ABTP9!FOK");
-
         valid = List.of("abcdefg", "AbTp9!fok");
     }
 

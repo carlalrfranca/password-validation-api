@@ -12,5 +12,4 @@ public class MinLengthRule implements PasswordRule {
 
         return password.length() >= minLength;
     }
-
 }

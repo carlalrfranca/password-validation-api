@@ -4,7 +4,6 @@ import br.com.clrf.domain.policy.PasswordPolicy;
 import br.com.clrf.service.PasswordUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class PasswordValidationConfigTest {
