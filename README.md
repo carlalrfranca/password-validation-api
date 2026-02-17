@@ -169,8 +169,6 @@ Expected response:
 
 ## 7. HTTP Status Codes
 
-## 7. HTTP Status Codes
-
 | Status Code | Description |
 |------------|-------------|
 | 200 OK | Password validation executed successfully |
