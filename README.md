@@ -303,9 +303,9 @@ The test suite is structured by architectural layers:
 - Controller tests to verify HTTP contract and response structure.
 - Integration tests covering end-to-end flow.
 
-Mockito was selectively applied in application and configuration tests to control specific execution paths (e.g., Optional branches) and validate behavior in isolation.\
+Mockito was selectively applied in application and configuration tests to control specific execution paths (e.g., Optional branches) and validate behavior in isolation.
 
-The goal is to ensure behavioral correctness, architectural separation, and prevent regressions when introducing new validation rules.\
+The goal is to ensure behavioral correctness, architectural separation, and prevent regressions when introducing new validation rules.
 
 ---
 

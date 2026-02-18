@@ -295,9 +295,9 @@ A suíte de testes foi estruturada seguindo a divisão arquitetural da aplicaç�
 - Testes do controller para verificar o contrato HTTP e a estrutura da resposta.
 - Testes de integração cobrindo o fluxo completo da requisição.
 
-O Mockito foi aplicado de forma seletiva nos testes da camada de aplicação e configuração, permitindo controlar cenários específicos (como os diferentes retornos de Optional) e validar comportamentos de forma isolada. \
+O Mockito foi aplicado de forma seletiva nos testes da camada de aplicação e configuração, permitindo controlar cenários específicos (como os diferentes retornos de Optional) e validar comportamentos de forma isolada.
 
-O objetivo é garantir correção comportamental, respeito à separação de camadas e prevenir regressões ao adicionar novas regras de validação.\
+O objetivo é garantir correção comportamental, respeito à separação de camadas e prevenir regressões ao adicionar novas regras de validação.
 
 ---
 
