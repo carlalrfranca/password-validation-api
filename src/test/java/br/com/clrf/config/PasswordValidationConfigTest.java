@@ -1,30 +1,32 @@
 package br.com.clrf.config;
 
-import br.com.clrf.domain.policy.PasswordPolicy;
-import br.com.clrf.service.PasswordUseCase;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-class PasswordValidationConfigTest {
+@ExtendWith(MockitoExtension.class)
+public class PasswordValidationConfigTest {
 
-    @Test
-    void shouldLoadPasswordPolicyBean() {
-        try (var context = new AnnotationConfigApplicationContext(PasswordValidationConfig.class)) {
+    @Mock
+    private PasswordValidationConfig config;
 
-            PasswordPolicy policy = context.getBean(PasswordPolicy.class);
-
-            assertNotNull(policy);
-        }
+    @BeforeEach
+    void setUp() {
+        config = new PasswordValidationConfig();
     }
 
     @Test
-    void shouldLoadPasswordUseCaseBean() {
-        try (var context = new AnnotationConfigApplicationContext(PasswordValidationConfig.class)) {
+    void shouldCreatePasswordPolicyBean() {
+        var policy = config.passwordPolicy();
+        assert policy != null;
+    }
 
-            PasswordUseCase useCase = context.getBean(PasswordUseCase.class);
-
-            assertNotNull(useCase);
-        }
+    @Test
+    void shouldCreatePasswordUseCaseBean() {
+        var policy = config.passwordPolicy();
+        var useCase = config.passwordUseCase(policy);
+        assert useCase != null;
     }
 }

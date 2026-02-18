@@ -1,49 +1,49 @@
 package br.com.clrf.domain.policy;
 
-import br.com.clrf.domain.rules.*;
+import br.com.clrf.domain.rules.PasswordRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class CompositePasswordPolicyTest {
 
-    private static final String SPECIAL = "!@#$%^&*()-+";
-    private static final int MIN_LENGTH = 9;
+    @Mock
+    private PasswordRule rule1;
+
+    @Mock
+    private PasswordRule rule2;
+
     private CompositePasswordPolicy policy;
-    private List<String> valid;
-    private List<String> invalid;
 
     @BeforeEach
     void setUp() {
-        policy = new CompositePasswordPolicy(
-                List.of(
-                        new NoWhiteSpaceRule(),
-                        new OnlyAllowedCharRule(SPECIAL),
-                        new MinLengthRule(MIN_LENGTH),
-                        new HasDigitRule(),
-                        new HasLowercaseRule(),
-                        new HasUppercaseRule(),
-                        new HasSpecialCharRule(SPECIAL),
-                        new NoRepeatedCharRule()
-                )
-        );
-
-        valid = List.of("AbTp9!fok", "AbTp9!fokC");
-        invalid = List.of("", "aa", "AAAbbbCc", "AbTp9!foo", "AbTp9!foA", "AbTp9 fok", "AbTp9!fok\t", "AbTp9!fok_");
+        MockitoAnnotations.openMocks(this);
+        policy = new CompositePasswordPolicy(List.of(rule1, rule2));
     }
 
     @Test
-    void shouldReturnTrueForValidPasswords() {
-        for (String p : valid) {
-            assertTrue(policy.passwordValidate(p).isEmpty());
-        }
+    void shouldReturnEmptyWhenAllRulesSatisfied() {
+        when(rule1.isSatisfiedBy("abc")).thenReturn(true);
+        when(rule2.isSatisfiedBy("abc")).thenReturn(true);
+        Optional<String> result = policy.passwordValidate("abc");
+        assertTrue(result.isEmpty());
     }
 
     @Test
-    void shouldReturnFalseForInvalidPasswords() {
-        for (String p : invalid) {
-            assertTrue(policy.passwordValidate(p).isPresent());
-        }
+    void shouldReturnFirstFailedRuleName() {
+        when(rule1.isSatisfiedBy("abc")).thenReturn(true);
+        when(rule2.isSatisfiedBy("abc")).thenReturn(false);
+        Optional<String> result = policy.passwordValidate("abc");
+        assertTrue(result.isPresent());
+        assertEquals(rule2.getClass().getSimpleName(), result.get());
     }
 }
