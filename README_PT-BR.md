@@ -287,15 +287,17 @@ Embora Java 17 fosse suficiente para este caso de uso, o Java 21 foi escolhido e
 
 ## 13. Estratégia de Testes
 
-O projeto inclui:
+A suíte de testes foi estruturada seguindo a divisão arquitetural da aplicação:
 
-- Testes unitários para cada regra
-- Testes da política composta
-- Testes do caso de uso
-- Testes do controller
-- Testes de integração
+- Testes unitários para cada regra individual (lógica de domínio).
+- Testes da política composta para validar o comportamento de agregação das regras.
+- Testes do caso de uso para validar a orquestração da aplicação.
+- Testes do controller para verificar o contrato HTTP e a estrutura da resposta.
+- Testes de integração cobrindo o fluxo completo da requisição.
 
-O objetivo é garantir isolamento comportamental e prevenir regressões ao adicionar novas regras.
+O Mockito foi aplicado de forma seletiva nos testes da camada de aplicação e configuração, permitindo controlar cenários específicos (como os diferentes retornos de Optional) e validar comportamentos de forma isolada.
+
+O objetivo é garantir correção comportamental, respeito à separação de camadas e prevenir regressões ao adicionar novas regras de validação.
 
 ---
 

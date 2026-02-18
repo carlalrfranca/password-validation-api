@@ -1,51 +1,53 @@
 package br.com.clrf.service;
 
-import br.com.clrf.domain.policy.CompositePasswordPolicy;
-import br.com.clrf.domain.rules.*;
+import br.com.clrf.domain.policy.PasswordPolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.List;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class PasswordUseCaseTest {
 
-    private static final String SPECIAL = "!@#$%^&*()-+";
-    private static final int MIN_LENGTH = 9;
+    @Mock
+    private PasswordPolicy policy;
     private PasswordUseCase useCase;
-    private List<String> valid;
-    private List<String> invalid;
 
     @BeforeEach
     void setUp() {
-        var policy = new CompositePasswordPolicy(
-                List.of(
-                        new NoWhiteSpaceRule(),
-                        new OnlyAllowedCharRule(SPECIAL),
-                        new MinLengthRule(MIN_LENGTH),
-                        new HasDigitRule(),
-                        new HasLowercaseRule(),
-                        new HasUppercaseRule(),
-                        new HasSpecialCharRule(SPECIAL),
-                        new NoRepeatedCharRule()
-                )
-        );
-
         useCase = new PasswordUseCase(policy);
-        valid = List.of("AbTp9!fok", "AbTp9!fokC");
-        invalid = List.of("", "aa", "AAAbbbCc", "AbTp9!foo", "AbTp9!foA", "AbTp9 fok", "AbTp9!fok\t", "AbTp9!fok_");
     }
 
     @Test
-    void shouldReturnTrueForValidPasswords() {
-        for (String p : valid) {
-            assertTrue(useCase.execute(p));
-        }
+    void shouldReturnTrueWhenNoRulesFails() {
+        when(policy.passwordValidate("valid")).thenReturn(Optional.empty());
+        boolean result = useCase.execute("valid");
+        assertTrue(result);
+        verify(policy).passwordValidate("valid");
     }
 
     @Test
-    void shouldReturnTrueFOrInvalidPasswords() {
-        for (String p : invalid) {
-            assertFalse(useCase.execute(p));
-        }
+    void shouldReturnFalseWhenNoRulesFails() {
+        when(policy.passwordValidate("invalid")).thenReturn(Optional.of("Failed rule"));
+        boolean result = useCase.execute("invalid");
+        assertFalse(result);
+        verify(policy).passwordValidate("invalid");
+    }
+
+    @Test
+    void shouldReturnTrueWhenOptionalIsEmpty() {
+        when(policy.passwordValidate("valid")).thenReturn(Optional.empty());
+        assertTrue(useCase.execute("valid"));
+    }
+
+    @Test
+    void shouldReturnFalseAndLogWhenOptionalIsPresent() {
+        when(policy.passwordValidate("invalid")).thenReturn(Optional.of("Failed rule"));
+        assertFalse(useCase.execute("invalid"));
     }
 }

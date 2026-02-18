@@ -295,15 +295,17 @@ Although Java 17 would be sufficient for this use case, Java 21 was selected str
 
 ## 13. Testing Strategy
 
-The project includes:
+The test suite is structured by architectural layers:
 
--   Unit tests for each rule
--   Composite policy tests
--   Use case tests
--   Controller tests
--   Integration tests
+- Unit tests for each individual rule (domain validation logic).
+- Composite policy tests to ensure rule aggregation behavior.
+- Use case tests to validate application orchestration.
+- Controller tests to verify HTTP contract and response structure.
+- Integration tests covering end-to-end flow.
 
-The goal is to ensure behavioral isolation and prevent regressions when adding new rules.
+Mockito was selectively applied in application and configuration tests to control specific execution paths (e.g., Optional branches) and validate behavior in isolation.
+
+The goal is to ensure behavioral correctness, architectural separation, and prevent regressions when introducing new validation rules.
 
 ---
 
