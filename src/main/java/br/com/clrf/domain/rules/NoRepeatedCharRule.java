@@ -1,8 +1,5 @@
 package br.com.clrf.domain.rules;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class NoRepeatedCharRule implements PasswordRule {
 
     @Override
