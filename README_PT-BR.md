@@ -2,7 +2,7 @@
 
 API REST segura para validação de senhas construída com Spring Boot, seguindo arquitetura em camadas e princípios SOLID.
 
----
+
 
 ## 1. Visão Geral
 
@@ -19,7 +19,7 @@ A solução foi projetada com ênfase em:
 - Testabilidade
 - Modelagem de domínio clara e explícita
 
----
+
 
 ## 2. Requisitos Funcionais
 
@@ -37,7 +37,7 @@ Uma senha é considerada válida se:
 
 A API retorna um booleano indicando se a senha é válida.
 
----
+
 
 ## 3. Estrutura do Projeto
 
@@ -79,7 +79,7 @@ src/main/java/br/com/clrf
 A camada de domínio é agnóstica a frameworks e contém exclusivamente lógica de negócio pura.  
 Ela é intencionalmente isolada do Spring e de quaisquer anotações específicas de framework, preservando portabilidade e separação estrita de responsabilidades.
 
----
+
 
 ## 4. Padrões Arquiteturais
 
@@ -94,7 +94,7 @@ O projeto separa responsabilidades em camadas distintas:
 
 Essa estrutura protege o domínio de dependências de framework e mantém o acoplamento reduzido.
 
----
+
 
 ### Padrão Composite para Composição de Regras
 
@@ -115,7 +115,7 @@ Benefícios:
 - Testes isolados por regra
 - Redução de complexidade condicional
 
----
+
 
 ## 5. Estratégia de Validação
 
@@ -123,7 +123,7 @@ Benefícios:
 - A camada de domínio assume entrada válida (não nula) como pré-condição.
 - A validação de transporte (JSON malformado, corpo nulo, campos nulos) é tratada na camada web
 
----
+
 
 ## 6. Tratamento de Erros e Matriz de Responsabilidades
 
@@ -141,7 +141,7 @@ Tratados automaticamente pelo Spring MVC e Jackson:
 Esses erros são considerados violações de contrato HTTP, não falhas de negócio.\
 O controller garante que requisições inválidas não alcancem a camada de domínio.\
 
----
+
 
 ### Camada de Aplicação (Service)
 
@@ -151,7 +151,7 @@ A camada de serviço:
 - Não realiza validação de transporte
 - Não contém regras de negócio
 
----
+
 
 ### Camada de Domínio (Policy & Rules)
 
@@ -233,7 +233,7 @@ curl -X POST http://localhost:8080/api-password/validate \
 | 400 Bad Request | Violação do contrato HTTP (corpo nulo, JSON malformado, content type inválido) |
 | 500 Internal Server Error | Erro inesperado no servidor |
 
----
+
 
 ## 9. Observabilidade
 
@@ -244,7 +244,7 @@ O logging é implementado na camada de serviço:
 - Falhas de validação são registradas no nível warn
 - O domínio permanece desacoplado do framework
 
----
+
 
 ## 10. Considerações de Segurança
 
@@ -260,7 +260,7 @@ Possíveis melhorias para ambiente produtivo:
 - Uso obrigatório de HTTPS
 - Limitação de tamanho da requisição
 
----
+
 
 ## 11. Tecnologias Utilizadas
 
@@ -270,7 +270,7 @@ Possíveis melhorias para ambiente produtivo:
 - JUnit 5
 - Lombok
 
----
+
 
 ## 12. Justificativa da Versão do Java
 
@@ -283,7 +283,7 @@ Embora Java 17 fosse suficiente para este caso de uso, o Java 21 foi escolhido e
 - Melhorias na JVM
 - Disponibilidade de Virtual Threads (Project Loom) para futuras evoluções de escalabilidade
 
----
+
 
 ## 13. Estratégia de Testes
 
@@ -299,7 +299,7 @@ O Mockito foi aplicado de forma seletiva nos testes da camada de aplicação e c
 
 O objetivo é garantir correção comportamental, respeito à separação de camadas e prevenir regressões ao adicionar novas regras de validação.
 
----
+
 
 ## 14. Como Executar
 

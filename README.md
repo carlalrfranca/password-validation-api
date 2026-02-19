@@ -3,7 +3,7 @@
 Secure password validation API built with Spring Boot, following layered
 architecture and SOLID principles.
 
----
+
 
 ## 1. Overview
 
@@ -23,7 +23,7 @@ The solution was designed with an emphasis on:
 - Testability
 - Clean and explicit domain modeling
 
----
+
 
 ## 2. Functional Requirements
 
@@ -41,7 +41,7 @@ A password is considered valid if it:
 
 The API returns a boolean indicating whether the password is valid.
 
----
+
 
 ## 3. Project Structure
 
@@ -84,7 +84,7 @@ The domain layer is framework-agnostic and contains only pure business logic.\
 The domain layer is intentionally isolated from Spring and any framework-specific \ 
 annotations to preserve portability and maintain strict separation of concerns.
 
----
+
 
 ## 4. Architectural Patterns
 
@@ -99,7 +99,7 @@ The project separates responsibilities into distinct layers:
 
 This protects the domain from framework dependencies and keeps coupling low.
 
----
+
 
 ### Composite Pattern for Rule Composition
 
@@ -120,14 +120,14 @@ Benefits:
 - Isolated rule-level testing
 - Reduced conditional complexity
 
----
+
 
 ## 5. Validation Strategy
 
 - Validation is delegated to CompositePasswordPolicy, which executes all configured rules and stops at the first failure (fail-fast approach).
 - The domain layer assumes valid (non-null) input as a precondition.
 - Transport-level validation (malformed JSON, null body, null fields) is handled at the web layer.
----
+
 
 ## 6. Error Handling & Responsibility Matrix
 
@@ -146,7 +146,7 @@ Handled automatically by Spring MVC and Jackson:
 These errors are considered contract violations, not business failures.\
 The controller ensures invalid requests do not reach the domain layer.\
 
----
+
 
 ### Application Layer (Service)
 
@@ -157,7 +157,7 @@ The service layer:
 - Does not perform transport validation
 - Does not contain business rules
 
-___
+
 
 ### Domain Layer (Policy & Rules)
 
@@ -171,7 +171,7 @@ The domain layer:
 
 This separation ensures the domain remains pure and framework-agnostic.
 
---- 
+
 
 ## 7. API Usage
 ### Endpoint
@@ -231,7 +231,7 @@ Expected response:
 
 5. Click Send.
 
----
+
 
 ## 8. HTTP Status Codes
 
@@ -252,7 +252,7 @@ Logging is implemented at the service layer:
 - Validation failures are logged at warn level
 - Domain layer remains framework-agnostic
 
----
+
 
 ## 10. Security Considerations
 
@@ -268,7 +268,7 @@ Potential production enhancements:
 - HTTPS enforcement
 - Request size limitation
 
----
+
 
 ## 11. Technology Stack
 
@@ -278,7 +278,7 @@ Potential production enhancements:
 - JUnit 5
 - Lombok
 
----
+
 
 ## 12. Java Version Choice
 
@@ -291,7 +291,7 @@ Although Java 17 would be sufficient for this use case, Java 21 was selected str
 - Improved JVM performance
 - Availability of virtual threads (Project Loom) for future scalability improvements
 
----
+
 
 ## 13. Testing Strategy
 
@@ -307,7 +307,7 @@ Mockito was selectively applied in application and configuration tests to contro
 
 The goal is to ensure behavioral correctness, architectural separation, and prevent regressions when introducing new validation rules.
 
----
+
 
 ## 14. How to Run
 
@@ -331,7 +331,7 @@ Application runs at:
 ```
 http://localhost:8080
 ```
----
+
 
 ## License
 
