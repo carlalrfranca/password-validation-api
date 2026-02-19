@@ -172,8 +172,8 @@ The domain layer:
 This separation ensures the domain remains pure and framework-agnostic.
 
 
-
 ## 7. API Usage
+
 ### Endpoint
 
 POST `/api-password/validate`
@@ -331,7 +331,6 @@ Application runs at:
 ```
 http://localhost:8080
 ```
-
 
 ## License
 
