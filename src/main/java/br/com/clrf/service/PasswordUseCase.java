@@ -9,6 +9,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+//#1 : A PasswordUseCase funciona como porta de entrada
 public class PasswordUseCase {
 
     private final PasswordPolicy rules;
